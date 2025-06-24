@@ -36,7 +36,7 @@ impl Board {
             return false;
         }
 
-        let val_index = val as usize;
+        let val_index = (val -1) as usize;
         let sg_index = (row / 3) * 3 + (col / 3);
 
         let cell = match self.grid.get_mut(row).and_then(|r| r.get_mut(col)) {
@@ -74,7 +74,7 @@ impl Board {
             Some(c) => c,
             None => return false,
         };
-        let val_index = *cell as usize;
+        let val_index = (*cell -1) as usize;
         *cell = 0;
 
         let row_cell = match self.rows.get_mut(row).and_then(|r| r.get_mut(val_index)) {
@@ -117,7 +117,7 @@ impl Board {
             return false;
         }
 
-        let val_index = value as usize;
+        let val_index = (value -1) as usize;
 
         if self.rows.get(row)
             .and_then(|r| r.get(val_index))
