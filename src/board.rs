@@ -32,36 +32,36 @@ impl Board {
         if !(1..=9).contains(&val) {
             return false;
         }
-        if !self.valid(row, col, val){
+        if !self.valid(row, col, val) {
             return false;
         }
 
-        let val_index = (val -1) as usize;
+        let val_index = (val - 1) as usize;
         let sg_index = (row / 3) * 3 + (col / 3);
 
-        let cell = match self.grid.get_mut(row).and_then(|r| r.get_mut(col)) {
-            Some(c) => c,
-            None => return false,
-        };
-        *cell = val;
+        if let Some(cell) = self.grid.get_mut(row).and_then(|r| r.get_mut(col)) {
+            *cell = val;
+        } else {
+            return false;
+        }
 
-        let row_cell = match self.rows.get_mut(row).and_then(|r| r.get_mut(val_index)) {
-            Some(c) => c,
-            None => return false,
-        };
-        *row_cell = true;
+        if let Some(row_cell) = self.rows.get_mut(row).and_then(|r| r.get_mut(val_index)) {
+            *row_cell = true;
+        } else {
+            return false;
+        }
 
-        let col_cell = match self.cols.get_mut(col).and_then(|r| r.get_mut(val_index)) {
-            Some(c) => c,
-            None => return false,
-        };
-        *col_cell = true;
+        if let Some(col_cell) = self.cols.get_mut(col).and_then(|r| r.get_mut(val_index)) {
+            *col_cell = true;
+        } else {
+            return false;
+        }
 
-        let sg_cell = match self.subgrid.get_mut(sg_index).and_then(|r| r.get_mut(val_index)) {
-            Some(c) => c,
-            None => return false,
-        };
-        *sg_cell = true;
+        if let Some(sg_cell) = self.subgrid.get_mut(sg_index).and_then(|r| r.get_mut(val_index)) {
+            *sg_cell = true;
+        } else {
+            return false;
+        }
 
         true
     }
@@ -70,30 +70,31 @@ impl Board {
 
         let sg_index = (row / 3) * 3 + (col / 3);
 
-        let cell = match self.grid.get_mut(row).and_then(|r| r.get_mut(col)) {
-            Some(c) => c,
-            None => return false,
+        let val_index = if let Some(cell) = self.grid.get_mut(row).and_then(|r| r.get_mut(col)) {
+            let v = *cell;
+            *cell = 0;
+            (v - 1) as usize
+        } else {
+            return false;
         };
-        let val_index = (*cell -1) as usize;
-        *cell = 0;
 
-        let row_cell = match self.rows.get_mut(row).and_then(|r| r.get_mut(val_index)) {
-            Some(c) => c,
-            None => return false,
-        };
-        *row_cell = false;
+        if let Some(row_cell) = self.rows.get_mut(row).and_then(|r| r.get_mut(val_index)) {
+            *row_cell = false;
+        } else {
+            return false;
+        }
 
-        let col_cell = match self.cols.get_mut(col).and_then(|r| r.get_mut(val_index)) {
-            Some(c) => c,
-            None => return false,
-        };
-        *col_cell = false;
+        if let Some(col_cell) = self.cols.get_mut(col).and_then(|r| r.get_mut(val_index)) {
+            *col_cell = false;
+        } else {
+            return false;
+        }
 
-        let sg_cell = match self.subgrid.get_mut(sg_index).and_then(|r| r.get_mut(val_index)) {
-            Some(c) => c,
-            None => return false,
-        };
-        *sg_cell = false;
+        if let Some(sg_cell) = self.subgrid.get_mut(sg_index).and_then(|r| r.get_mut(val_index)) {
+            *sg_cell = false;
+        } else {
+            return false;
+        }
 
         true
     }
